@@ -6,6 +6,7 @@ tags:
   - 数据结构
   - 算法
 type: home
+mathjax: true
 comments: true
 date: 2019-08-29 22:43:49
 ---
