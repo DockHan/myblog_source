@@ -69,6 +69,7 @@ class Node:
 #### 递归方法实现二叉树的四种遍历方式
 ```python
 from typing import List
+from queue import Queue
 
 class BinaryTree:
   '''
@@ -92,7 +93,7 @@ class BinaryTree:
     if not node:  # 节点为Null，直接return
       return
     self.in_order(node.left_tree)
-    self.result_list.append(node.vale)
+    self.result_list.append(node.value)
     self.in_order(node.right_tree)
     return self.result_list
 
@@ -120,21 +121,144 @@ class BinaryTree:
     self.result_list.append(node.value)
     return self.result_list
 
-  def level_order(self, node: Node) -> List:
+  def level_order(self, node: Node) -> List[int]:
     '''
-    层次遍历，需要保存到数组里，使用前请调用self.init_result() function
+    层次遍历，需要保存到数组里，该方法内部已经调用self.init_result()， 无需外部调用
+    使用队列的数据结构，将节点放到队列中，先进先出
     '''
+    self.init_result()
     if not node:
-      return None
-    node_list = []  #用于保存每一层的node
-    self.result_list.append(node.value)
-    if not node.left_tree:
-      node_list.append(node.left_tree)
-    if not node.right_tree:
-      node_list.append(node.right_tree)
-    while not node_list:
-      
+        return None
+    q = Queue()  # 使用队列对树进行层次遍历
+    q.put(node)  # first add root node
+    while q.qsize() != 0:
+        get_node = q.get()  # type: Node
+        self.result_list.append(get_node.value)
+        if get_node.left_tree:
+            q.put(get_node.left_tree)
+        if get_node.right_tree:
+            q.put(get_node.right_tree)
+    return self.result_list
+    
+  
+if __name__ == "__main__":
+    node_leaf_4 = Node(4)
+    node_leaf_8 = Node(8)
+    node_leaf_12 = Node(12)
+    node_leaf_16 = Node(16)
+
+    node_6 = Node(6)
+    node_6.left_tree = node_leaf_4
+    node_6.right_tree = node_leaf_8
+
+    node_14 = Node(14)
+    node_14.left_tree = node_leaf_12
+    node_14.right_tree = node_leaf_16
+
+    node_root = Node(10)
+    node_root.left_tree = node_6
+    node_root.right_tree = node_14
+
+    bt = BinaryTree()
+    bt.init_result()
+    pre_order_list = bt.pre_order(node_root)
+    print(pre_order_list)
+    bt.init_result()
+    in_order_list = bt.in_order(node_root)
+    print(in_order_list)
+    bt.init_result()
+    post_order_list = bt.post_order(node_root)
+    print(post_order_list)
+    level_order_list = bt.level_order(node_root)
+    print(level_order_list)
+
+'''
+pre_order_list:   [10, 6, 4, 8, 14, 12, 16]
+in_order_list:    [4, 6, 8, 10, 12, 14, 16]
+post_order_list:  [4, 8, 6, 12, 16, 14, 10]
+level_order_list: [10, 6, 14, 4, 8, 12, 16]
+'''
 ```
+#### 循环方法实现二叉树的四种遍历方式（使用堆栈数据结构）
+```python
+class BinaryTreeOptimization:
+    """
+    基于堆栈的方法对二叉树进行遍历，算法进一步会优化
+    """
+    @staticmethod
+    def in_order(node: Node) -> List[int]:
+        """
+        借助队列和队列，对二叉树进行中序遍历
+        :param node:
+        :return:
+        """
+        if node is None:  # None，直接return
+            return []
+
+        result = []
+        stack = []
+        pos = node
+        while pos is not None or len(stack) > 0:
+            if pos is not None:
+                stack.append(pos)
+                pos = pos.left_tree
+            else:
+                pos = stack.pop()
+                result.append(pos.value)
+                pos = pos.right_tree
+
+        return result
+
+    @staticmethod
+    def pre_order(node: Node) -> List[int]:
+        """
+        借助队列和队列，对二叉树进行中序遍历,前序遍历
+        :param node:
+        :return:
+        """
+        if not node:  # 节点为None，直接return
+            return []
+
+        result = []
+        s = Stack()
+        s.push(node)
+        while s.is_empty() is not True:
+            get_node = s.pop()  # type: Node
+            result.append(get_node.value)
+            if get_node.right_tree:  # 先将右子树压栈
+                s.push(get_node.right_tree)
+            if get_node.left_tree:
+                s.push(get_node.left_tree)
+        return result
+
+    def post_order(self, node: Node) -> List[int]:
+        """
+        # 后序打印二叉树（非递归）
+        # 使用两个栈结构
+        # 第一个栈进栈顺序：左节点->右节点->跟节点
+        # 第一个栈弹出顺序： 跟节点->右节点->左节点(先序遍历栈弹出顺序：跟->左->右)
+        # 第二个栈存储为第一个栈的每个弹出依次进栈
+        # 最后第二个栈依次出栈
+        :param node:
+        :return:
+        """
+        if not node:
+            return []
+        result = []
+        stack = [node]
+        stack2 = []
+        while len(stack) > 0:
+            node = stack.pop()
+            stack2.append(node)
+            if node.left_tree is not None:
+                stack.append(node.left_tree)
+            if node.right_tree is not None:
+                stack.append(node.right_tree)
+        while len(stack2) > 0:
+            result.append(stack2.pop().value)
+        return result
+```
+
 
 
 
