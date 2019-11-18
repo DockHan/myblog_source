@@ -68,4 +68,90 @@ React.createElement('a', {href: 'http://facebook.github.io/react/'}, 'Hello!');
   var root = React.createElement('ul', {className: 'my-list'}, child);
   React.render(root, document.body);
   ```
+- 对于常见的HTML标签，React已经内置了工厂方法， 比如:
+```js
+var root = React.DOM.ul({className: "my-list"}, React.DOM.li(null, 'Text Content'));
+```
+
+#### 如何使用JSX
+- 使用原生的HTML标签
+- 使用组件
+**两者约定通过大小写进行区分，小写的字符串是HTML标签， 大写开头的变量是React组件**
+
+```js
+// 使用HTML标签
+var myDivElement = <div className='foo'></div>;
+render(myDivElement, document.getElementById('root'));
+
+//使用组件
+var myElement = <HelloWorld name="earth" />;
+```
+- 使用JS表达式
+```js
+// input JSX
+var person = <Person name={windows.isLoggedIn ? windows.name : ''} />;
+
+// Output JS
+var person = React.createElement(Person, {name: windows.isLoggedIn ? windows.name : ""});
+
+// 子组件也可以作为表达式使用
+
+var content = <Container> {windows.isLoggedIn ? <Nav /> : <Login />} </Container>;
+
+var content = React.createElment(Container, null, windows.isLoggedIn ? <Nav /> : <Login />);
+```
+
+#### 注释
+在 JSX 里使用注释也很简单，就是沿用 JavaScript，唯一要注意的是在一个组件的子元素位置使用注释要用 {} 包起来。
+```js
+var content = (
+  <Nav>
+      {/* child comment, put {} around */}
+      <Person
+        /* multi
+           line
+           comment */
+        name={window.isLoggedIn ? window.name : ''} // end of line comment
+      />
+  </Nav>
+);
+```
+
+### 属性扩散
+有时候 一个组件有多个属性，使用者不想一个个的写下这些属性， 或者有时候你甚至不知道这些属性的名字，这个时候speed attributes的功能就很有用了
+比如:
+```js
+var props = {};
+props.foo = x;
+props.bar = y;
+var component = <Component {...props} />;
+
+// 属性也可以被覆盖
+var props = { foo: 'default' };
+var component = <Component {...props} foo={'override'} />;
+console.log(component.props.foo); // 'override'
+```
+
+## 组件
+两个核心概念：
+- **props**
+  - 组件的属性，接收外部传入的参数
+- **state**
+  - 表示组件当前的状态，是一个“状态机”，根据state呈现不同的UI展示
+
+- **划分状态数据的原则**
+  - 让组件尽可能的少状态： 目的是组件容易维护
+  - 什么样的数据属性可以当作状态？
+    - 可计算的数据： 比如数组长度
+    - 和props重复的数据
+
+- 无状态组件
+  - 你也可以用纯粹的函数来定义无状态的组件(stateless function)，这种组件没有状态，没有生命周期，只是简单的接受 props 渲染生成 DOM 结构。无状态组件非常简单，开销很低，如果可能的话尽量使用无状态组件。比如使用箭头函数定义：
+
+```js
+const HelloMessage = (props) => <div> Hello {props.name}</div>;
+render(<HelloMessage name="John" />, mountNode);
+```
+
+
 
