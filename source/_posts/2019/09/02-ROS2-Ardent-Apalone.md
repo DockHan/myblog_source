@@ -34,7 +34,7 @@ date: 2019-09-08 16:09:51
   ROS2不止能运行在Linux系统之上，还增加了对Windows和MACOS等系统的支持，让开发者的选择更加自由。
 
 ### ROS2的架构与ROS1的区别
-![ROS2架构](../../../images/01&#32;ros2archtecture.png)
+![ROS2架构](/../../../images/01&#32;ros2archtecture.png)
 1. OS层
   ROS1主要构建于Linux系统之上，ROS2带来了改变，支持构建的系统包括Linux、Windows、Mac、RTOS，甚至没有操作系统的裸机。
 2. 中间件
@@ -50,7 +50,7 @@ date: 2019-09-08 16:09:51
 在DDS中，每一个发布者或者订阅者都称为参与者（participant），类似于ROS中节点的概念。每一个参与者都可以使用某种定义好的数据类型来读写全局数据空间。`
 4 **ROS2的通讯模型**
 ROS1 主要是基于topic service等通讯机制，ROS2主要是基于DDS(Data Distribution Service), 所以通讯模型相对会复杂一些：
-![](../../../images/02&#32;ros2communication.png)
+![通讯模型](/../../../images/02&#32;ros2communication.png)
 ROS2的通讯模型有以下几个关键概念：
 
 4.1. **参与者（Domain Participant）**

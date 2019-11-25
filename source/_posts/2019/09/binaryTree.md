@@ -274,7 +274,7 @@ class BinaryTreeOptimization:
 '''
 ```
 寻找根节点和左右子树
-![](../../../images/03build_binary_tree.png)
+![](/../../../images/03build_binary_tree.png)
 - **实现代码**
 ```python
 
